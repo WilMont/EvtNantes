@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>title</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+
+    <div id="App">
+
+        <pre>{{donnees}}</pre>
+        <!-- <div class="card" v-for="records in donnees">
+            {{ records.ville }}
+        </div> -->
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+
+        var apiURL = 'https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_agenda-evenements-nantes-nantes-metropole&facet=emetteur&facet=rubrique&facet=lieu&facet=ville'
+        var config = { 'Authorization': 'bearer ' + 'f7455e0bb1ae54c7da0da93a73b42a2a3d0ce8929721753b44ee3106' }
+
+        var App = new Vue({
+
+            el: '#App',
+
+            data: {
+                donnees: [],
+            },
+
+            watch: {
+                donnees: 'fetchData'
+            },
+
+            created: function () {
+                this.fetchData()
+            },
+
+            methods: {
+                fetchData: function () {
+                    var self = this
+                    axios.get(apiURL, config).then(function (response) {
+                        //console.log(response)
+                        self.donnees = response.data.donnees
+                        //console.log(self.commits[0].html_url);
+                    })
+                        .catch(function (error) {
+                            console.log(error);
+                        })
+                }
+            }
+
+        })
+
+    </script>
+
+</body>
+
+</html>
