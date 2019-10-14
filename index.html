@@ -6,19 +6,37 @@
     <title>title</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
 </head>
 
 <body>
 
     <div id="App">
+        <table>
+            <thead>
+                <tr>
+                    <th>Arrêt</th>
+                    <th>Coordonnées</th>
+                </tr>
+            </thead>
+                <tbody v-for="donnee in donnees">
+                    <tr>
+                        <td>{{ donnee.fields.stop_name }}</td>
+                        <td>{{ donnee.fields.stop_coordinates }}</td>
 
-        <pre>{{donnees}}</pre>
-        <!-- <div class="card" v-for="records in donnees">
-            {{ records.ville }}
-        </div> -->
+                        <!-- En cours, texte cliquable pour afficher la localisation de l'arrêt dans Google Maps.  -->
+                        <!-- <td><a href="www.google.com/maps/place/47°13'12.9&quot;N+1°36'12.2&quot;W/@{{ donnee.fields.stop_coordinates }},17z/data=!3m1!4b1!4m5!3m4!1s0x0:0x0!8m2!3d47.2202472!4d-1.6033991">Voir sur une carte</a></td> -->
+                    </tr>
+                </tbody>
+        </table>
+    </div>
+
 
     </div>
 
@@ -27,7 +45,7 @@
 
     <script>
 
-        var apiURL = 'https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_agenda-evenements-nantes-nantes-metropole&facet=emetteur&facet=rubrique&facet=lieu&facet=ville'
+        var apiURL = 'https://data.nantesmetropole.fr/api/records/1.0/search/?dataset=244400404_tan-arrets'
         var config = { 'Authorization': 'bearer ' + 'f7455e0bb1ae54c7da0da93a73b42a2a3d0ce8929721753b44ee3106' }
 
         var App = new Vue({
@@ -35,11 +53,7 @@
             el: '#App',
 
             data: {
-                donnees: [],
-            },
-
-            watch: {
-                donnees: 'fetchData'
+                donnees: null,
             },
 
             created: function () {
@@ -50,8 +64,8 @@
                 fetchData: function () {
                     var self = this
                     axios.get(apiURL, config).then(function (response) {
-                        //console.log(response)
-                        self.donnees = response.data.donnees
+                        console.log(response)
+                        self.donnees = response.data.records
                         //console.log(self.commits[0].html_url);
                     })
                         .catch(function (error) {
